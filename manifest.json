@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "TaskSense - Contextual Task Manager",
+  "version": "1.0.0",
+  "description": "Attach tasks and notes directly to URLs. Never forget why you saved a page.",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "48": "assets/icons/icon-48.png",
+      "128": "assets/icons/icon-128.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
