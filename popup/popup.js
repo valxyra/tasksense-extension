@@ -8,6 +8,7 @@ import { getAllTasks, getAllFolders, getSettings } from '../utils/storage.js';
 import { getDomainTag } from '../utils/domain-tagger.js';
 import { createReminder, clearReminder } from '../utils/reminder-manager.js';
 import { searchTasks } from '../utils/search.js';
+import { initI18n } from '../utils/i18n.js';
 
 // State
 let tasks = [];
@@ -42,6 +43,7 @@ const elements = {
 
 // Initialize popup
 async function initPopup() {
+  initI18n(); // Initialize translations
   await loadSettings();
   applyTheme();
   await loadData();
@@ -260,18 +262,18 @@ async function handleAddTask() {
     await refreshData();
   } catch (error) {
     console.error('Failed to create task:', error);
-    alert('Gagal membuat task. Silakan coba lagi.');
+    alert(chrome.i18n.getMessage("failCreateTask") || 'Gagal membuat task. Silakan coba lagi.');
   }
 }
 
 // Handle adding a new folder
 async function handleAddFolder() {
-  const folderName = prompt('Nama folder baru:', '');
+  const folderName = prompt(chrome.i18n.getMessage("promptNewFolder") || 'Nama folder baru:', '');
   if (!folderName || folderName.trim() === '') return;
 
   const trimmedName = folderName.trim();
   if (trimmedName.length > 50) {
-    alert('Nama folder maksimal 50 karakter');
+    alert(chrome.i18n.getMessage("errFolderLength") || 'Nama folder maksimal 50 karakter');
     return;
   }
 
@@ -283,7 +285,7 @@ async function handleAddFolder() {
     });
 
     if (!newFolder) {
-      alert('Gagal membuat folder. Silakan coba lagi.');
+      alert(chrome.i18n.getMessage("failCreateFolder") || 'Gagal membuat folder. Silakan coba lagi.');
       return;
     }
 
@@ -294,7 +296,7 @@ async function handleAddFolder() {
     renderTaskList();
   } catch (error) {
     console.error('Failed to create folder:', error);
-    alert('Gagal membuat folder. Silakan coba lagi.');
+    alert(chrome.i18n.getMessage("failCreateFolder") || 'Gagal membuat folder. Silakan coba lagi.');
   }
 }
 
@@ -347,7 +349,8 @@ async function refreshData() {
 
 // Render folder select dropdown
 function renderFolderSelect() {
-  elements.folderSelect.innerHTML = '<option value="">[Pilih folder]</option>';
+  const defaultText = chrome.i18n.getMessage("folderSelectDefault") || '[Pilih folder]';
+  elements.folderSelect.innerHTML = `<option value="">${defaultText}</option>`;
   
   folders.forEach(folder => {
     const option = document.createElement('option');
@@ -367,10 +370,11 @@ function renderFolderList() {
   
   // All Folders Item
   const allFoldersElement = document.createElement('div');
+  const allFoldersText = chrome.i18n.getMessage("allFolders") || 'Semua Folder';
   allFoldersElement.className = `folder-item ${currentFolderId === null ? 'active' : ''}`;
   allFoldersElement.innerHTML = `
     <div class="folder-dot" style="background: var(--ts-coral)"></div>
-    <div class="folder-name">Semua Folder</div>
+    <div class="folder-name">${escapeHtml(allFoldersText)}</div>
   `;
   allFoldersElement.addEventListener('click', () => {
     currentFolderId = null;
@@ -447,10 +451,13 @@ function renderTaskList() {
   if (filteredTasks.length === 0) {
     const emptyState = document.createElement('div');
     emptyState.className = 'empty-state';
+    const title = currentFolderId ? (chrome.i18n.getMessage('emptyFolder') || 'Folder kosong') : (chrome.i18n.getMessage('emptyTasks') || 'Belum ada task');
+    const subtitle = currentFolderId ? (chrome.i18n.getMessage('emptyFolderSub') || 'Belum ada task di folder ini.') : (chrome.i18n.getMessage('emptyTasksSub') || 'Tambahkan task pertama Anda di atas.');
+    
     emptyState.innerHTML = `
       <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
-      <div class="empty-state-title">${currentFolderId ? 'Folder kosong' : 'Belum ada task'}</div>
-      <div class="empty-state-subtitle">${currentFolderId ? 'Belum ada task di folder ini.' : 'Tambahkan task pertama Anda di atas.'}</div>
+      <div class="empty-state-title">${title}</div>
+      <div class="empty-state-subtitle">${subtitle}</div>
     `;
     elements.taskContainer.appendChild(emptyState);
     return;
@@ -503,7 +510,7 @@ function renderTaskList() {
     const deleteBtn = taskElement.querySelector('.task-delete-btn');
     if (deleteBtn) {
       deleteBtn.addEventListener('click', async () => {
-        if (confirm('Yakin ingin menghapus task ini?')) {
+        if (confirm(chrome.i18n.getMessage("confirmDeleteTask") || 'Yakin ingin menghapus task ini?')) {
           await deleteTask(task.id);
           await refreshData();
         }
@@ -512,7 +519,7 @@ function renderTaskList() {
 
     // Double click to edit task title (simplified - in real app would have edit modal)
     taskElement.querySelector('.task-title').addEventListener('dblclick', async () => {
-      const newTitle = prompt('Edit task title:', task.title);
+      const newTitle = prompt(chrome.i18n.getMessage("promptEditTask") || 'Edit task title:', task.title);
       if (newTitle !== null && newTitle.trim() !== '') {
         await updateTask(task.id, { title: newTitle.trim() });
         await refreshData();

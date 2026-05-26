@@ -409,10 +409,27 @@ header h1 svg {
 footer {
   margin-top: var(--ts-space-6);
   padding-top: var(--ts-space-4);
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--ts-space-3);
 }
 
 .version-info {
   color: var(--ts-text-3);
   font-size: var(--ts-text-xs);
+}
+
+.github-link {
+  color: var(--ts-text-3);
+  font-size: var(--ts-text-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--ts-space-1);
+  text-decoration: none;
+  transition: color var(--ts-duration-fast) var(--ts-ease-smooth);
+}
+
+.github-link:hover {
+  color: var(--ts-text-1);
 }
