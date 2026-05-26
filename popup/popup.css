@@ -354,6 +354,27 @@ header {
   border-color: var(--ts-border-focus);
 }
 
+.sidebar-toggle-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--ts-border);
+  border-radius: var(--ts-radius-sm);
+  background: var(--ts-bg-2);
+  color: var(--ts-text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--ts-duration-fast) var(--ts-ease-smooth);
+}
+
+.sidebar-toggle-btn:hover {
+  background: var(--ts-bg-3);
+  border-color: var(--ts-coral-border);
+  color: var(--ts-coral);
+}
+
 .reminder-toggle {
   width: 30px;
   height: 28px;
