@@ -226,27 +226,34 @@ function extractDomain(url) {
  * Get tag info for a domain
  * @param {string} url - URL to get tag for
  * @param {Object} customTags - Custom tag mappings
- * @returns {{ tag: string, color: string }} Tag info
+ * @returns {{ tag: string, color: string, tagClass: string }} Tag info
  */
 function getDomainTag(url, customTags = {}) {
+  const enrichTag = (tagInfo) => {
+    return {
+      ...tagInfo,
+      tagClass: `tag-${tagInfo.tag.toLowerCase()}`
+    };
+  };
+
   try {
     const domain = extractDomain(url);
     
     if (!domain) {
-      return DEFAULT_DOMAIN_TAG_MAP['default'];
+      return enrichTag(DEFAULT_DOMAIN_TAG_MAP['default']);
     }
     
     // Check custom tags first
     if (customTags[domain]) {
-      return {
+      return enrichTag({
         tag: customTags[domain].tag || 'Custom',
         color: customTags[domain].color || '#6B7280'
-      };
+      });
     }
     
     // Check exact domain match
     if (DEFAULT_DOMAIN_TAG_MAP[domain]) {
-      return DEFAULT_DOMAIN_TAG_MAP[domain];
+      return enrichTag(DEFAULT_DOMAIN_TAG_MAP[domain]);
     }
     
     // Check subdomain match (e.g., docs.github.com -> github.com)
@@ -254,22 +261,22 @@ function getDomainTag(url, customTags = {}) {
     for (let i = 0; i < parts.length - 1; i++) {
       const possibleDomain = parts.slice(i).join('.');
       if (DEFAULT_DOMAIN_TAG_MAP[possibleDomain]) {
-        return DEFAULT_DOMAIN_TAG_MAP[possibleDomain];
+        return enrichTag(DEFAULT_DOMAIN_TAG_MAP[possibleDomain]);
       }
     }
     
     // Check partial match (e.g., github.com/* matches github.com)
     for (const [key] of Object.entries(DEFAULT_DOMAIN_TAG_MAP)) {
       if (domain.includes(key) && key !== 'default') {
-        return DEFAULT_DOMAIN_TAG_MAP[key];
+        return enrichTag(DEFAULT_DOMAIN_TAG_MAP[key]);
       }
     }
     
     // Fallback
-    return DEFAULT_DOMAIN_TAG_MAP['default'];
+    return enrichTag(DEFAULT_DOMAIN_TAG_MAP['default']);
   } catch (error) {
     console.error('Error getting domain tag:', error);
-    return DEFAULT_DOMAIN_TAG_MAP['default'];
+    return enrichTag(DEFAULT_DOMAIN_TAG_MAP['default']);
   }
 }
 

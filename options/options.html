@@ -4,21 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TaskSense — Pengaturan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
   <div id="options-container">
     <header>
-      <h1>⚙️ TaskSense — Pengaturan</h1>
+      <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        TaskSense — Pengaturan
+      </h1>
       <p class="subtitle">Kelola preferensi dan data TaskSense Anda</p>
     </header>
 
     <main>
       <!-- Tema -->
       <section class="settings-section">
-        <h2>🎨 Tema</h2>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+          Tema
+        </h2>
         <div class="setting-item">
-          <label for="theme-select">Pilih tema:</label>
+          <label for="theme-select" class="setting-label">Pilih tema:</label>
           <select id="theme-select">
             <option value="light">Terang (Light)</option>
             <option value="dark">Gelap (Dark)</option>
@@ -28,15 +37,18 @@
 
       <!-- Default Settings -->
       <section class="settings-section">
-        <h2>📋 Default Settings</h2>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          Default Settings
+        </h2>
         <div class="setting-item">
-          <label for="default-folder-select">Folder default:</label>
+          <label for="default-folder-select" class="setting-label">Folder default:</label>
           <select id="default-folder-select">
             <option value="">Tidak ada (task tanpa folder)</option>
           </select>
         </div>
         <div class="setting-item">
-          <label for="default-priority-select">Prioritas default:</label>
+          <label for="default-priority-select" class="setting-label">Prioritas default:</label>
           <select id="default-priority-select">
             <option value="low">Rendah (Low)</option>
             <option value="medium" selected>Menengah (Medium)</option>
@@ -47,49 +59,63 @@
 
       <!-- Browser Startup Reminder -->
       <section class="settings-section">
-        <h2>🔔 Browser Startup Reminder</h2>
-        <div class="setting-item toggle">
-          <label>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Browser Startup Reminder
+        </h2>
+        <div class="setting-item">
+          <label class="ts-toggle">
             <input type="checkbox" id="startup-reminder-enabled" checked>
-            Tampilkan notifikasi saat browser dibuka
+            <span class="ts-toggle-track"><span class="ts-toggle-thumb"></span></span>
+            <span class="ts-toggle-label">Tampilkan notifikasi saat browser dibuka</span>
           </label>
         </div>
-        <div class="setting-item toggle">
-          <label>
+        <div class="setting-item">
+          <label class="ts-toggle">
             <input type="checkbox" id="startup-reminder-count" checked>
-            Sertakan jumlah task aktif di notifikasi
+            <span class="ts-toggle-track"><span class="ts-toggle-thumb"></span></span>
+            <span class="ts-toggle-label">Sertakan jumlah task aktif di notifikasi</span>
           </label>
         </div>
       </section>
 
       <!-- Notifications -->
       <section class="settings-section">
-        <h2>📢 Notifikasi</h2>
-        <div class="setting-item toggle">
-          <label>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          Notifikasi
+        </h2>
+        <div class="setting-item">
+          <label class="ts-toggle">
             <input type="checkbox" id="notifications-enabled" checked>
-            Aktifkan semua notifikasi
+            <span class="ts-toggle-track"><span class="ts-toggle-thumb"></span></span>
+            <span class="ts-toggle-label">Aktifkan semua notifikasi</span>
           </label>
         </div>
       </section>
 
       <!-- Display Settings -->
       <section class="settings-section">
-        <h2>👁️ Tampilan</h2>
-        <div class="setting-item toggle">
-          <label>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          Tampilan
+        </h2>
+        <div class="setting-item">
+          <label class="ts-toggle">
             <input type="checkbox" id="show-favicon" checked>
-            Tampilkan favicon di task
-          </label>
-        </div>
-        <div class="setting-item toggle">
-          <label>
-            <input type="checkbox" id="show-domain-tag" checked>
-            Tampilkan domain tag
+            <span class="ts-toggle-track"><span class="ts-toggle-thumb"></span></span>
+            <span class="ts-toggle-label">Tampilkan favicon di task</span>
           </label>
         </div>
         <div class="setting-item">
-          <label for="sort-by-select">Urutkan task berdasarkan:</label>
+          <label class="ts-toggle">
+            <input type="checkbox" id="show-domain-tag" checked>
+            <span class="ts-toggle-track"><span class="ts-toggle-thumb"></span></span>
+            <span class="ts-toggle-label">Tampilkan domain tag</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="sort-by-select" class="setting-label">Urutkan task berdasarkan:</label>
           <select id="sort-by-select">
             <option value="createdAt">Tanggal dibuat</option>
             <option value="priority">Prioritas</option>
@@ -97,7 +123,7 @@
           </select>
         </div>
         <div class="setting-item">
-          <label for="sort-order-select">Urutan:</label>
+          <label for="sort-order-select" class="setting-label">Urutan:</label>
           <select id="sort-order-select">
             <option value="desc">Terbaru dulu</option>
             <option value="asc">Terlama dulu</option>
@@ -107,11 +133,17 @@
 
       <!-- Data Management -->
       <section class="settings-section">
-        <h2>💾 Manajemen Data</h2>
+        <h2 class="settings-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+          Manajemen Data
+        </h2>
         
         <div class="data-actions">
           <div class="action-card">
-            <h3>📥 Import Data</h3>
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import Data
+            </h3>
             <p>Impor data dari file JSON backup</p>
             <input type="file" id="import-file-input" accept=".json" class="file-input">
             <div class="import-strategy">
@@ -122,31 +154,46 @@
                 <option value="merge_prefer_import">Gabung (prefer import)</option>
               </select>
             </div>
-            <button id="import-btn" class="btn btn-primary">Import</button>
+            <button id="import-btn" class="btn btn-primary btn-md">Import</button>
             <div id="import-result" class="result-message"></div>
           </div>
 
           <div class="action-card">
-            <h3>📤 Export Data</h3>
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Data
+            </h3>
             <p>Ekspor data ke file</p>
             <div class="export-buttons">
-              <button id="export-txt-btn" class="btn btn-secondary">📄 Export TXT</button>
-              <button id="export-md-btn" class="btn btn-secondary">📝 Export Markdown</button>
-              <button id="export-json-btn" class="btn btn-secondary">💾 Export JSON (Backup)</button>
+              <button id="export-txt-btn" class="btn btn-secondary btn-md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                Export TXT
+              </button>
+              <button id="export-md-btn" class="btn btn-secondary btn-md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                Export Markdown
+              </button>
+              <button id="export-json-btn" class="btn btn-secondary btn-md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export JSON (Backup)
+              </button>
             </div>
           </div>
 
           <div class="action-card danger">
-            <h3>⚠️ Reset Data</h3>
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              Reset Data
+            </h3>
             <p>Hapus semua data (tasks, folders, settings)</p>
-            <button id="reset-btn" class="btn btn-danger">Reset Semua Data</button>
+            <button id="reset-btn" class="btn btn-danger btn-md">Reset Semua Data</button>
           </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <p class="version-info">TaskSense v1.0.0</p>
+      <p class="version-info">TaskSense v2.0</p>
     </footer>
   </div>
 

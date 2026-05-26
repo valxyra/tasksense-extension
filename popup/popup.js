@@ -19,6 +19,7 @@ let searchQuery = '';
 // Reminder state
 let reminderEnabled = false;
 let reminderDatetime = '';
+let fpInstance = null;
 
 // DOM Elements
 const elements = {
@@ -49,6 +50,16 @@ async function initPopup() {
   renderTaskList();
   setupEventListeners();
   updateFaviconFromActiveTab();
+  
+  // Initialize Flatpickr
+  fpInstance = flatpickr(elements.reminderDatetime, {
+    enableTime: true,
+    dateFormat: "Y-m-d\\TH:i",
+    minDate: "today",
+    onChange: function(selectedDates, dateStr) {
+      reminderDatetime = dateStr;
+    }
+  });
 }
 
 // Apply theme from settings
@@ -104,10 +115,19 @@ function setupEventListeners() {
   // Clear reminder button
   elements.clearReminderBtn.addEventListener('click', handleClearReminder);
   
-  // Reminder datetime change
+  // Reminder datetime change (fallback/sync)
   elements.reminderDatetime.addEventListener('change', (e) => {
     reminderDatetime = e.target.value;
   });
+  
+  // Sidebar toggle
+  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebarToggleBtn && sidebar) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+  }
 
   // Listen for updates from content script or background
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -258,8 +278,8 @@ async function handleAddFolder() {
   try {
     const newFolder = await createFolder({
       name: trimmedName,
-      color: '#4A90D9', // Default color
-      icon: '📁' // Default icon
+      color: '#CC785C', // Default coral color
+      icon: '' // No longer use emoji
     });
 
     if (!newFolder) {
@@ -295,7 +315,11 @@ function handleReminderToggle() {
     // Set default time to 1 hour from now
     const defaultTime = new Date(Date.now() + 3600000);
     const localStr = defaultTime.toISOString().slice(0, 16);
-    elements.reminderDatetime.value = localStr;
+    if (fpInstance) {
+      fpInstance.setDate(defaultTime);
+    } else {
+      elements.reminderDatetime.value = localStr;
+    }
     reminderDatetime = localStr;
   }
 }
@@ -304,7 +328,11 @@ function handleReminderToggle() {
 function handleClearReminder() {
   reminderEnabled = false;
   reminderDatetime = '';
-  elements.reminderDatetime.value = '';
+  if (fpInstance) {
+    fpInstance.clear();
+  } else {
+    elements.reminderDatetime.value = '';
+  }
   elements.reminderPickerContainer.style.display = 'none';
   elements.reminderToggle.classList.remove('active');
 }
@@ -337,12 +365,27 @@ function renderFolderSelect() {
 function renderFolderList() {
   elements.folderList.innerHTML = '';
   
+  // All Folders Item
+  const allFoldersElement = document.createElement('div');
+  allFoldersElement.className = `folder-item ${currentFolderId === null ? 'active' : ''}`;
+  allFoldersElement.innerHTML = `
+    <div class="folder-dot" style="background: var(--ts-coral)"></div>
+    <div class="folder-name">Semua Folder</div>
+  `;
+  allFoldersElement.addEventListener('click', () => {
+    currentFolderId = null;
+    elements.folderSelect.value = '';
+    renderFolderList();
+    renderTaskList();
+  });
+  elements.folderList.appendChild(allFoldersElement);
+  
   folders.forEach(folder => {
     const folderElement = document.createElement('div');
     folderElement.className = `folder-item ${folder.id === currentFolderId ? 'active' : ''}`;
     folderElement.innerHTML = `
-      <div class="folder-icon">${folder.icon}</div>
-      <div class="folder-name">${folder.name}</div>
+      <div class="folder-dot" style="background: ${folder.color || '#CC785C'}"></div>
+      <div class="folder-name">${escapeHtml(folder.name)}</div>
     `;
     folderElement.addEventListener('click', () => {
       currentFolderId = folder.id;
@@ -376,8 +419,10 @@ function renderTaskList() {
   }
 
   // Sort tasks based on settings
-  const sortBy = settings.display?.taskSortBy || 'createdAt';
+  const sortBy = settings.display?.taskSortBy || 'priority'; // Change default to priority
   const sortOrder = settings.display?.taskSortOrder || 'desc';
+  
+  const priorityValue = { high: 3, medium: 2, low: 1 };
   
   filteredTasks.sort((a, b) => {
     let valueA = a[sortBy];
@@ -386,6 +431,9 @@ function renderTaskList() {
     if (sortBy === 'createdAt' || sortBy === 'completedAt') {
       valueA = valueA ? new Date(valueA).getTime() : 0;
       valueB = valueB ? new Date(valueB).getTime() : 0;
+    } else if (sortBy === 'priority') {
+      valueA = priorityValue[a.priority || 'medium'] || 0;
+      valueB = priorityValue[b.priority || 'medium'] || 0;
     }
     
     return sortOrder === 'asc' 
@@ -399,9 +447,11 @@ function renderTaskList() {
   if (filteredTasks.length === 0) {
     const emptyState = document.createElement('div');
     emptyState.className = 'empty-state';
-    emptyState.textContent = currentFolderId 
-      ? 'Belum ada task di folder ini' 
-      : 'Belum ada task. Tambahkan task pertama!';
+    emptyState.innerHTML = `
+      <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+      <div class="empty-state-title">${currentFolderId ? 'Folder kosong' : 'Belum ada task'}</div>
+      <div class="empty-state-subtitle">${currentFolderId ? 'Belum ada task di folder ini.' : 'Tambahkan task pertama Anda di atas.'}</div>
+    `;
     elements.taskContainer.appendChild(emptyState);
     return;
   }
@@ -409,17 +459,34 @@ function renderTaskList() {
   filteredTasks.forEach(task => {
     const taskElement = document.createElement('div');
     taskElement.className = `task-item ${task.status === 'completed' ? 'completed' : ''}`;
+    taskElement.setAttribute('data-id', task.id);
+    taskElement.setAttribute('data-priority', task.priority || 'medium');
+    
+    const tagInfo = getDomainTag(task.url || task.domain);
+
     taskElement.innerHTML = `
-      <input type="checkbox" class="task-checkbox" ${task.status === 'completed' ? 'checked' : ''}>
+      <div class="task-checkbox-wrapper">
+        <input type="checkbox" class="task-checkbox" aria-label="Tandai selesai" ${task.status === 'completed' ? 'checked' : ''}>
+      </div>
       <div class="task-body">
         <div class="task-title">${escapeHtml(task.title)}</div>
         <div class="task-meta">
-          ${task.domainTag ? `<span class="domain-tag" style="background-color: ${getDomainTagColor(task.url || task.domain)};">${task.domainTag}</span>` : ''}
-          <span class="priority-dot priority-${task.priority}" title="Prioritas: ${task.priority}"></span>
-          ${task.url ? `<a href="${escapeHtml(task.url)}" target="_blank" class="task-url-link">${extractDomain(task.url)}</a>` : ''}
+          ${task.domainTag ? `<span class="domain-tag ${tagInfo.tagClass || 'tag-link'}">${escapeHtml(task.domainTag)}</span>` : ''}
+          ${task.url ? `
+          <a href="${escapeHtml(task.url)}" target="_blank" class="task-url-link" title="${escapeHtml(extractDomain(task.url))}">
+            ${escapeHtml(extractDomain(task.url))}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px;vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>` : ''}
+          ${task.reminder && task.reminder.enabled ? `
+          <span class="task-reminder-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </span>
+          ` : ''}
         </div>
-        ${task.note ? `<div class="task-note">${escapeHtml(task.note)}</div>` : ''}
       </div>
+      <button class="task-delete-btn" aria-label="Hapus task" title="Hapus task">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </button>
     `;
 
     const checkbox = taskElement.querySelector('.task-checkbox');
@@ -432,6 +499,16 @@ function renderTaskList() {
       }
       await refreshData();
     });
+
+    const deleteBtn = taskElement.querySelector('.task-delete-btn');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async () => {
+        if (confirm('Yakin ingin menghapus task ini?')) {
+          await deleteTask(task.id);
+          await refreshData();
+        }
+      });
+    }
 
     // Double click to edit task title (simplified - in real app would have edit modal)
     taskElement.querySelector('.task-title').addEventListener('dblclick', async () => {

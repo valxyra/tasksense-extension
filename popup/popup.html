@@ -3,41 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskSense</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/lib/flatpickr/flatpickr.min.css">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div id="popup-container">
     <header>
-      <div class="logo">TaskSense</div>
+      <div class="header-left">
+        <button id="sidebar-toggle-btn" class="btn-icon btn-ghost" aria-label="Toggle Sidebar" style="margin-right: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="9" x2="9" y1="3" y2="21"/></svg>
+        </button>
+        <div class="logo">TaskSense</div>
+      </div>
       <div class="header-actions">
         <input type="text" id="search-input" placeholder="Cari task...">
-        <button id="settings-btn" aria-label="Pengaturan">⚙</button>
+        <button id="settings-btn" aria-label="Pengaturan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
       </div>
     </header>
 
     <div class="quick-add-bar">
-      <div class="favicon-container">
-        <img id="quick-add-favicon" src="" alt="Favicon" class="favicon">
-      </div>
-      <div class="quick-add-inputs">
-        <input type="text" id="task-title" placeholder="Nama task..." maxlength="120">
-        <div class="quick-add-controls">
-          <select id="folder-select">
-            <option value="">[Pilih folder]</option>
-          </select>
-           <select id="priority-select">
-            <option value="low">Rendah</option>
-            <option value="medium" selected>Sedang</option>
-            <option value="high">Tinggi</option>
-          </select>
-          <button id="reminder-toggle" class="reminder-toggle" aria-label="Aktifkan reminder">⏰</button>
-          <div id="reminder-picker-container" class="reminder-picker-container" style="display: none;">
-            <input type="datetime-local" id="reminder-datetime">
-            <button id="clear-reminder-btn" class="clear-reminder-btn" aria-label="Hapus reminder">✕</button>
-          </div>
-          <button id="add-task-btn">+</button>
+      <div class="task-title-row">
+        <div class="favicon-container">
+          <img id="quick-add-favicon" src="" alt="Favicon" class="favicon">
         </div>
+        <input type="text" id="task-title" placeholder="Nama task..." maxlength="120">
+        <button id="add-task-btn" aria-label="Tambah Task">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+      <div class="quick-add-controls">
+        <select id="folder-select">
+          <option value="">[Pilih folder]</option>
+        </select>
+        <select id="priority-select">
+          <option value="low">Rendah</option>
+          <option value="medium" selected>Sedang</option>
+          <option value="high">Tinggi</option>
+        </select>
+        <button id="reminder-toggle" class="reminder-toggle" aria-label="Aktifkan reminder">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+      </div>
+      <div id="reminder-picker-container" class="reminder-picker-container" style="display: none;">
+        <input type="text" id="reminder-datetime" placeholder="Pilih waktu..." style="flex: 1;">
+        <button id="clear-reminder-btn" class="clear-reminder-btn" aria-label="Hapus reminder">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
     </div>
 
@@ -47,7 +61,10 @@
         <div id="folder-list">
           <!-- Folder items will be rendered here -->
         </div>
-        <button id="add-folder-btn">+ Folder Baru</button>
+        <button id="add-folder-btn">
+          <svg style="margin-right:4px; vertical-align:text-bottom;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+          Folder Baru
+        </button>
       </div>
 
       <div class="task-list">
@@ -59,6 +76,7 @@
     </div>
   </div>
 
+  <script src="../assets/lib/flatpickr/flatpickr.min.js"></script>
   <script type="module" src="popup.js"></script>
 </body>
 </html>
