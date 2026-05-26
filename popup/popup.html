@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskSense</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="popup-container">
+    <header>
+      <div class="logo">TaskSense</div>
+      <div class="header-actions">
+        <input type="text" id="search-input" placeholder="Cari task...">
+        <button id="settings-btn" aria-label="Pengaturan">⚙</button>
+      </div>
+    </header>
+
+    <div class="quick-add-bar">
+      <div class="favicon-container">
+        <img id="quick-add-favicon" src="" alt="Favicon" class="favicon">
+      </div>
+      <div class="quick-add-inputs">
+        <input type="text" id="task-title" placeholder="Nama task..." maxlength="120">
+        <div class="quick-add-controls">
+          <select id="folder-select">
+            <option value="">[Pilih folder]</option>
+          </select>
+          <select id="priority-select">
+            <option value="low">Rendah</option>
+            <option value="medium" selected>Sedang</option>
+            <option value="high">Tinggi</option>
+          </select>
+          <button id="add-task-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="sidebar">
+        <h3>Folder</h3>
+        <div id="folder-list">
+          <!-- Folder items will be rendered here -->
+        </div>
+        <button id="add-folder-btn">+ Folder Baru</button>
+      </div>
+
+      <div class="task-list">
+        <h3>Task</h3>
+        <div id="task-container">
+          <!-- Task items will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
