@@ -56,7 +56,7 @@ async function initPopup() {
   // Initialize Flatpickr
   fpInstance = flatpickr(elements.reminderDatetime, {
     enableTime: true,
-    dateFormat: "Y-m-d\\TH:i",
+    dateFormat: "Y-m-d H:i",
     minDate: "today",
     onChange: function(selectedDates, dateStr) {
       reminderDatetime = dateStr;
@@ -316,7 +316,10 @@ function handleReminderToggle() {
     
     // Set default time to 1 hour from now
     const defaultTime = new Date(Date.now() + 3600000);
-    const localStr = defaultTime.toISOString().slice(0, 16);
+    // Get local date/time in YYYY-MM-DD HH:mm format by adjusting for timezone offset
+    const tzOffset = defaultTime.getTimezoneOffset() * 60000; // offset in milliseconds
+    const localTime = new Date(defaultTime.getTime() - tzOffset);
+    const localStr = localTime.toISOString().slice(0, 16).replace('T', ' ');
     if (fpInstance) {
       fpInstance.setDate(defaultTime);
     } else {
