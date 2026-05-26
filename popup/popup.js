@@ -7,6 +7,7 @@ import { createTask, updateTask, deleteTask, completeTask, reorderTask, createFo
 import { getAllTasks, getAllFolders, getSettings } from '../utils/storage.js';
 import { getDomainTag } from '../utils/domain-tagger.js';
 import { createReminder, clearReminder } from '../utils/reminder-manager.js';
+import { searchTasks } from '../utils/search.js';
 
 // State
 let tasks = [];
@@ -41,12 +42,19 @@ const elements = {
 // Initialize popup
 async function initPopup() {
   await loadSettings();
+  applyTheme();
   await loadData();
   renderFolderSelect();
   renderFolderList();
   renderTaskList();
   setupEventListeners();
   updateFaviconFromActiveTab();
+}
+
+// Apply theme from settings
+function applyTheme() {
+  const theme = settings.theme || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
 }
 
 // Load settings from storage
