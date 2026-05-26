@@ -7,7 +7,7 @@
  */
 
 // Constants
-const NOTIFICATION_ICON_URL = chrome.runtime.getURL('assets/icons/icon-128.png');
+const NOTIFICATION_ICON_URL = chrome.runtime.getURL('assets/icons/icon128.png');
 const DEFAULT_SETTINGS = {
   theme: 'light',
   defaultFolderId: null,

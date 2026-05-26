@@ -262,6 +262,11 @@ async function handleAddFolder() {
       icon: '📁' // Default icon
     });
 
+    if (!newFolder) {
+      alert('Gagal membuat folder. Silakan coba lagi.');
+      return;
+    }
+
     // Refresh folder list and select new folder
     await refreshData();
     elements.folderSelect.value = newFolder.id;

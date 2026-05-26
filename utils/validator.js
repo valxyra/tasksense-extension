@@ -5,7 +5,7 @@
 
 // Regex patterns
 const PATTERNS = {
-  ID: /^(task|folder)_[a-z0-9]+$/,
+  ID: /^(task|folder)_[a-z0-9_]+$/,
   HEX_COLOR: /^#[0-9A-Fa-f]{6}$/,
   URL: /^https?:\/\/.+/,
   ISO_DATE: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
