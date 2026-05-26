@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskSense — Pengaturan</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div id="options-container">
+    <header>
+      <h1>⚙️ TaskSense — Pengaturan</h1>
+      <p class="subtitle">Kelola preferensi dan data TaskSense Anda</p>
+    </header>
+
+    <main>
+      <!-- Tema -->
+      <section class="settings-section">
+        <h2>🎨 Tema</h2>
+        <div class="setting-item">
+          <label for="theme-select">Pilih tema:</label>
+          <select id="theme-select">
+            <option value="light">Terang (Light)</option>
+            <option value="dark">Gelap (Dark)</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Default Settings -->
+      <section class="settings-section">
+        <h2>📋 Default Settings</h2>
+        <div class="setting-item">
+          <label for="default-folder-select">Folder default:</label>
+          <select id="default-folder-select">
+            <option value="">Tidak ada (task tanpa folder)</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="default-priority-select">Prioritas default:</label>
+          <select id="default-priority-select">
+            <option value="low">Rendah (Low)</option>
+            <option value="medium" selected>Menengah (Medium)</option>
+            <option value="high">Tinggi (High)</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Browser Startup Reminder -->
+      <section class="settings-section">
+        <h2>🔔 Browser Startup Reminder</h2>
+        <div class="setting-item toggle">
+          <label>
+            <input type="checkbox" id="startup-reminder-enabled" checked>
+            Tampilkan notifikasi saat browser dibuka
+          </label>
+        </div>
+        <div class="setting-item toggle">
+          <label>
+            <input type="checkbox" id="startup-reminder-count" checked>
+            Sertakan jumlah task aktif di notifikasi
+          </label>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section class="settings-section">
+        <h2>📢 Notifikasi</h2>
+        <div class="setting-item toggle">
+          <label>
+            <input type="checkbox" id="notifications-enabled" checked>
+            Aktifkan semua notifikasi
+          </label>
+        </div>
+      </section>
+
+      <!-- Display Settings -->
+      <section class="settings-section">
+        <h2>👁️ Tampilan</h2>
+        <div class="setting-item toggle">
+          <label>
+            <input type="checkbox" id="show-favicon" checked>
+            Tampilkan favicon di task
+          </label>
+        </div>
+        <div class="setting-item toggle">
+          <label>
+            <input type="checkbox" id="show-domain-tag" checked>
+            Tampilkan domain tag
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="sort-by-select">Urutkan task berdasarkan:</label>
+          <select id="sort-by-select">
+            <option value="createdAt">Tanggal dibuat</option>
+            <option value="priority">Prioritas</option>
+            <option value="title">Judul</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="sort-order-select">Urutan:</label>
+          <select id="sort-order-select">
+            <option value="desc">Terbaru dulu</option>
+            <option value="asc">Terlama dulu</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Data Management -->
+      <section class="settings-section">
+        <h2>💾 Manajemen Data</h2>
+        
+        <div class="data-actions">
+          <div class="action-card">
+            <h3>📥 Import Data</h3>
+            <p>Impor data dari file JSON backup</p>
+            <input type="file" id="import-file-input" accept=".json" class="file-input">
+            <div class="import-strategy">
+              <label for="import-strategy-select">Strategi:</label>
+              <select id="import-strategy-select">
+                <option value="merge">Gabung (preserve local)</option>
+                <option value="overwrite">Ganti semua</option>
+                <option value="merge_prefer_import">Gabung (prefer import)</option>
+              </select>
+            </div>
+            <button id="import-btn" class="btn btn-primary">Import</button>
+            <div id="import-result" class="result-message"></div>
+          </div>
+
+          <div class="action-card">
+            <h3>📤 Export Data</h3>
+            <p>Ekspor data ke file</p>
+            <div class="export-buttons">
+              <button id="export-txt-btn" class="btn btn-secondary">📄 Export TXT</button>
+              <button id="export-md-btn" class="btn btn-secondary">📝 Export Markdown</button>
+              <button id="export-json-btn" class="btn btn-secondary">💾 Export JSON (Backup)</button>
+            </div>
+          </div>
+
+          <div class="action-card danger">
+            <h3>⚠️ Reset Data</h3>
+            <p>Hapus semua data (tasks, folders, settings)</p>
+            <button id="reset-btn" class="btn btn-danger">Reset Semua Data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p class="version-info">TaskSense v1.0.0</p>
+    </footer>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>
