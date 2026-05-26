@@ -6,6 +6,7 @@
 import { createTask, updateTask, deleteTask, completeTask, reorderTask, createFolder } from '../utils/task-manager.js';
 import { getAllTasks, getAllFolders, getSettings } from '../utils/storage.js';
 import { getDomainTag } from '../utils/domain-tagger.js';
+import { createReminder, clearReminder } from '../utils/reminder-manager.js';
 
 // State
 let tasks = [];
@@ -13,6 +14,10 @@ let folders = [];
 let settings = {};
 let currentFolderId = null;
 let searchQuery = '';
+
+// Reminder state
+let reminderEnabled = false;
+let reminderDatetime = '';
 
 // DOM Elements
 const elements = {
@@ -26,7 +31,11 @@ const elements = {
   folderList: document.getElementById('folder-list'),
   taskContainer: document.getElementById('task-container'),
   addFolderBtn: document.getElementById('add-folder-btn'),
-  settingsBtn: document.getElementById('settings-btn')
+  settingsBtn: document.getElementById('settings-btn'),
+  reminderToggle: document.getElementById('reminder-toggle'),
+  reminderPickerContainer: document.getElementById('reminder-picker-container'),
+  reminderDatetime: document.getElementById('reminder-datetime'),
+  clearReminderBtn: document.getElementById('clear-reminder-btn')
 };
 
 // Initialize popup
@@ -79,6 +88,17 @@ function setupEventListeners() {
   // Settings button
   elements.settingsBtn.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
+  });
+
+  // Reminder toggle
+  elements.reminderToggle.addEventListener('click', handleReminderToggle);
+  
+  // Clear reminder button
+  elements.clearReminderBtn.addEventListener('click', handleClearReminder);
+  
+  // Reminder datetime change
+  elements.reminderDatetime.addEventListener('change', (e) => {
+    reminderDatetime = e.target.value;
   });
 
   // Listen for updates from content script or background
@@ -162,6 +182,19 @@ async function handleAddTask() {
     const domain = url ? extractDomain(url) : '';
     const domainTagInfo = url ? getDomainTag(url) : { tag: 'Link', color: '#6B7280' };
 
+    // Build reminder object if enabled
+    let reminder = null;
+    if (reminderEnabled && reminderDatetime) {
+      const reminderTime = new Date(reminderDatetime);
+      if (reminderTime.getTime() > Date.now()) {
+        reminder = {
+          enabled: true,
+          datetime: reminderTime.toISOString(),
+          alarmName: '' // Will be set by task-manager after task ID is generated
+        };
+      }
+    }
+
     // Create task
     const newTask = await createTask({
       title: title,
@@ -172,11 +205,27 @@ async function handleAddTask() {
       domain: domain,
       folderId: currentFolderId,
       priority: elements.prioritySelect.value,
-      reminder: null // No reminder for quick add
+      reminder: reminder
     });
 
-    // Clear input and refocus
+    // Create actual alarm if reminder is set
+    if (newTask && newTask.reminder && newTask.reminder.enabled) {
+      const alarmResult = await createReminder(newTask.id, newTask.reminder.datetime);
+      if (alarmResult) {
+        // Update task with alarm name
+        await updateTask(newTask.id, {
+          reminder: {
+            enabled: true,
+            datetime: newTask.reminder.datetime,
+            alarmName: alarmResult.alarmName
+          }
+        });
+      }
+    }
+
+    // Clear inputs and reset reminder state
     elements.taskTitleInput.value = '';
+    handleClearReminder();
     elements.taskTitleInput.focus();
 
     // Refresh data and UI
@@ -214,6 +263,37 @@ async function handleAddFolder() {
     console.error('Failed to create folder:', error);
     alert('Gagal membuat folder. Silakan coba lagi.');
   }
+}
+
+// Handle reminder toggle button click
+function handleReminderToggle() {
+  if (reminderEnabled) {
+    // Hide picker and reset
+    reminderEnabled = false;
+    reminderDatetime = '';
+    elements.reminderPickerContainer.style.display = 'none';
+    elements.reminderToggle.classList.remove('active');
+  } else {
+    // Show picker
+    reminderEnabled = true;
+    elements.reminderPickerContainer.style.display = 'flex';
+    elements.reminderToggle.classList.add('active');
+    
+    // Set default time to 1 hour from now
+    const defaultTime = new Date(Date.now() + 3600000);
+    const localStr = defaultTime.toISOString().slice(0, 16);
+    elements.reminderDatetime.value = localStr;
+    reminderDatetime = localStr;
+  }
+}
+
+// Handle clear reminder button click
+function handleClearReminder() {
+  reminderEnabled = false;
+  reminderDatetime = '';
+  elements.reminderDatetime.value = '';
+  elements.reminderPickerContainer.style.display = 'none';
+  elements.reminderToggle.classList.remove('active');
 }
 
 // Refresh all data from storage

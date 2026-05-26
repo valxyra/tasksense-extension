@@ -5,6 +5,7 @@
 
 import { getAllTasks, getTasksByFolder, getAllFolders, getSettings, setData, clearAll } from './storage.js';
 import { generateId, sanitizeTask, sanitizeFolder, validateTask, validateFolder } from './validator.js';
+import { clearReminder } from './reminder-manager.js';
 
 // Storage keys
 const STORAGE_KEYS = {

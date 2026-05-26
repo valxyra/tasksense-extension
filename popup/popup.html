@@ -26,11 +26,16 @@
           <select id="folder-select">
             <option value="">[Pilih folder]</option>
           </select>
-          <select id="priority-select">
+           <select id="priority-select">
             <option value="low">Rendah</option>
             <option value="medium" selected>Sedang</option>
             <option value="high">Tinggi</option>
           </select>
+          <button id="reminder-toggle" class="reminder-toggle" aria-label="Aktifkan reminder">⏰</button>
+          <div id="reminder-picker-container" class="reminder-picker-container" style="display: none;">
+            <input type="datetime-local" id="reminder-datetime">
+            <button id="clear-reminder-btn" class="clear-reminder-btn" aria-label="Hapus reminder">✕</button>
+          </div>
           <button id="add-task-btn">+</button>
         </div>
       </div>
